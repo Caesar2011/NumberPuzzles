@@ -2,9 +2,12 @@ package me.caesar2011.numberpuzzles;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+
+import me.caesar2011.numberpuzzles.views.BidirectionalViewPager;
+import me.caesar2011.numberpuzzles.views.GamePagerAdapter;
 
 
 /**
@@ -17,6 +20,18 @@ import android.view.MenuItem;
  * more than a {@link PuzzleDetailFragment}.
  */
 public class PuzzleDetailActivity extends ActionBarActivity {
+
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally to access previous
+     * and next wizard steps.
+     */
+    private BidirectionalViewPager mPager;
+
+    /**
+     * The pager adapter, which provides the pages to the view pager widget.
+     */
+    private GamePagerAdapter mPagerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +53,20 @@ public class PuzzleDetailActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
+            /*Bundle arguments = new Bundle();
             arguments.putString(PuzzleDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(PuzzleDetailFragment.ARG_ITEM_ID));
             PuzzleDetailFragment fragment = new PuzzleDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.puzzle_detail_container, fragment)
-                    .commit();
+                    .commit();*/
+
+            // Instantiate a ViewPager and a PagerAdapter.
+            mPager = (BidirectionalViewPager) findViewById(R.id.pager);
+            mPagerAdapter = new GamePagerAdapter(getFragmentManager());
+            mPager.setAdapter(mPagerAdapter);
+            mPager.setCurrentItem(1, 0, false);
         }
     }
 

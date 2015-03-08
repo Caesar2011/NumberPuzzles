@@ -2,7 +2,11 @@ package me.caesar2011.numberpuzzles;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+
+import me.caesar2011.numberpuzzles.views.BidirectionalViewPager;
+import me.caesar2011.numberpuzzles.views.GameFragment;
+import me.caesar2011.numberpuzzles.views.GamePagerAdapter;
 
 
 /**
@@ -21,8 +25,19 @@ import android.support.v4.app.FragmentActivity;
  * {@link PuzzleListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class PuzzleListActivity extends FragmentActivity
+public class PuzzleListActivity extends ActionBarActivity
         implements PuzzleListFragment.Callbacks {
+
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally to access previous
+     * and next wizard steps.
+     */
+    private BidirectionalViewPager mPager;
+
+    /**
+     * The pager adapter, which provides the pages to the view pager widget.
+     */
+    private GamePagerAdapter mPagerAdapter;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -35,7 +50,7 @@ public class PuzzleListActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_list);
 
-        if (findViewById(R.id.puzzle_detail_container) != null) {
+        if (findViewById(R.id.pager) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -44,7 +59,7 @@ public class PuzzleListActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((PuzzleListFragment) getSupportFragmentManager()
+            ((PuzzleListFragment) getFragmentManager()
                     .findFragmentById(R.id.puzzle_list))
                     .setActivateOnItemClick(true);
         }
@@ -62,19 +77,24 @@ public class PuzzleListActivity extends FragmentActivity
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Bundle arguments = new Bundle();
+            /*Bundle arguments = new Bundle();
             arguments.putString(PuzzleDetailFragment.ARG_ITEM_ID, id);
             PuzzleDetailFragment fragment = new PuzzleDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.puzzle_detail_container, fragment)
-                    .commit();
+                    .commit();*/
+
+            mPager = (BidirectionalViewPager) findViewById(R.id.pager);
+            mPagerAdapter = new GamePagerAdapter(getFragmentManager());
+            mPager.setAdapter(mPagerAdapter);
+            mPager.setCurrentItem(1);
 
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, PuzzleDetailActivity.class);
-            detailIntent.putExtra(PuzzleDetailFragment.ARG_ITEM_ID, id);
+            //detailIntent.putExtra(GameFragment.ARG_PUZ_TYPE, id);
             startActivity(detailIntent);
         }
     }
